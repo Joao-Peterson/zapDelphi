@@ -1,0 +1,206 @@
+### token
+@token = EAASeUjj8qaUBAOy8ZBXtrBUS5vKlIFnKgdiyPZCT2SOZAuFNwZAqfVcMjqfCWeQZAAOGlsyZBIP2863mH0cpGXgTJtvZCzqpYvt3mxxawY0tXD49gAfZBBqiEUrE04T7rQbXqgi3wz9st6dxKZBonmLWlOHCtd8Sr97ZAqcMbTpoFgrRdSq0shcidZCjd13SidZAEXiz08SfozljTwZDZD
+@phoneId = 107491975338265
+@accountId = 102058839227503
+
+### send message
+POST https://graph.facebook.com/v15.0/{{phoneId}}/messages
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "messaging_product": "whatsapp",
+    "recipient_type": "individual",
+    "to": "5542984184379",
+    "preview_url": true,
+    "type": "text",
+    "text": {
+        "body": "hello hello" 
+    }
+}
+
+### request phone numbers
+GET https://graph.facebook.com/v15.0/{{accountId}}/phone_numbers
+?access_token={{token}}
+
+### send message with buttons
+POST https://graph.facebook.com/v15.0/{{phoneId}}/messages
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "messaging_product": "whatsapp",
+    "recipient_type": "individual",
+    "to": "5542984184379",
+    "preview_url": true,
+    "type": "interactive",
+    "interactive": {
+        "type": "button",
+        "body": {
+            "text": "Olá meu nobre, sua ordem de serviço de código: ```893296``` (_descrição da ordem_) foi cadastrada com sucesso e será efetuada em breve. Se não deseja receber mais receber notificações sobre suas ordens de serviço, pressione o botão abaixo", 
+        },
+        "action": {
+            "buttons": [
+                {
+                    "type": "reply",
+                    "reply": {
+                        "title": "Desinscrever",
+                        "id": "673addaf-b815-44fe-9ade-eea0c3b15847",
+                    }
+                }
+            ]
+        }
+    }
+}
+
+### send message template with buttons
+POST https://graph.facebook.com/v15.0/{{phoneId}}/messages
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "messaging_product": "whatsapp",
+    "recipient_type": "individual",
+    "to": "5542984184379",
+    "preview_url": true,
+    "type": "template",
+    "template": {
+        "name": "service_order",
+        "language": {
+            "code": "pt_BR"
+        },
+        "components": [
+            {
+                "type": "body",
+                "parameters": [
+                    {
+                        "type": "text",
+                        "text": "Joazinho", 
+                    },
+                    {
+                        "type": "text",
+                        "text": "9374849", 
+                    },
+                    {
+                        "type": "text",
+                        "text": "conserto da pirimboca da parafuseta", 
+                    }
+                ]
+            },
+            {
+                "type": "button",
+                "sub_type": "quick_reply",
+                "index": "0",
+                "parameters": [
+                    {
+                        "type": "payload",
+                        "payload": "7f3d7249-fdde-45c5-89c2-d5f81d76b7c4"
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+### webhook validate
+GET  https://f8ad-177-22-24-112.ngrok.io/whatsappWebhook
+?hub.verify_token=dGhpc2lzYXRva2Vu
+&hub.challenge=1158201444
+&hub.mode=subscribe
+
+### webhook message
+POST http://127.0.0.1:5056/whatsappWebhook
+Content-Type: application/json
+
+{
+    "object": "whatsapp_business_account",
+    "entry": [
+        {
+            "id": "102058839227503",
+            "changes": [
+                {
+                    "value": {
+                        "messaging_product": "whatsapp",
+                        "metadata": {
+                            "display_phone_number": "15550223146",
+                            "phone_number_id": "107491975338265"
+                        },
+                        "contacts": [
+                            {
+                                "profile": {
+                                    "name": "João Peterson"
+                                },
+                                "wa_id": "554284184379"
+                            }
+                        ],
+                        "messages": [
+                            {
+                                "context": {
+                                    "from": "15550223146",
+                                    "id": "wamid.HBgMNTU0Mjg0MTg0Mzc5FQIAERgSOUM5NzYwRUZENDk2N0ZGOUIzAA=="
+                                },
+                                "from": "554284184379",
+                                "id": "wamid.HBgMNTU0Mjg0MTg0Mzc5FQIAEhgUM0VCMDgxMzcyQTk5NTFBRUNCN0IA",
+                                "timestamp": "1669778111",
+                                "type": "interactive",
+                                "interactive": {
+                                    "type": "button_reply",
+                                    "button_reply": {
+                                        "id": "cc5f644c-4352-4955-a6bc-454113d5d45e",
+                                        "title": "Desinscrever"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "field": "messages"
+                }
+            ]
+        }
+    ]
+}
+
+### webhook status
+POST http://127.0.0.1:5056/whatsappWebhook
+Content-Type: application/json
+
+{
+    "object": "whatsapp_business_account",
+    "entry": [
+        {
+            "id": "102058839227503",
+            "changes": [
+                {
+                    "value": {
+                        "messaging_product": "whatsapp",
+                        "metadata": {
+                            "display_phone_number": "15550223146",
+                            "phone_number_id": "107491975338265"
+                        },
+                        "statuses": [
+                            {
+                                "id": "wamid.HBgMNTU0Mjg0MTg0Mzc5FQIAERgSRUE3MDU5RjZCNzZGNDU5QjdDAA==",
+                                "status": "sent",
+                                "timestamp": "1669764112",
+                                "recipient_id": "554284184379",
+                                "conversation": {
+                                    "id": "94b42f9673e0c5c79ab502f07dea5dcd",
+                                    "expiration_timestamp": "1669828620",
+                                    "origin": {
+                                        "type": "user_initiated"
+                                    }
+                                },
+                                "pricing": {
+                                    "billable": true,
+                                    "pricing_model": "CBP",
+                                    "category": "user_initiated"
+                                }
+                            }
+                        ]
+                    },
+                    "field": "messages"
+                }
+            ]
+        }
+    ]
+}

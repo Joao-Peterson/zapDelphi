@@ -1,0 +1,11 @@
+{
+	"name": "zapDelphi",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "./src",
+	"projects": [],
+	"dependencies": {
+		"https://github.com/joao-peterson/phonenum": "^v1.1.0"
+	}
+}
