@@ -8,6 +8,7 @@ uses
 type
 
     // remember to copy the config.ini file to where the test.exe executable is !
+    [Ignore('Disabled to not spam messages. Comment this out to enable message send testing')]
     [TestFixture]
     TzapTest = class
         [Test]
@@ -40,6 +41,14 @@ type
         procedure zapPhoneNumTest(phone: string; expectedFull: string; shouldPass: Integer);
     end;
 
+    [TestFixture]
+    TzapWebhookTest = class
+        [Test]
+        [TestCase('Case 0: interactiveButtonReply', '../../files/interactiveButtonReply.json,Teste,8151fb8e-bb51-443c-a2a6-23c73c56a7da')]
+        [TestCase('Case 1: buttonReply',            '../../files/buttonReply.json,Teste,8151fb8e-bb51-443c-a2a6-23c73c56a7da')]
+        procedure zapWebhookButtonsReply(testFile: string; expectedTitle: string; expectedId: string);
+    end;
+
 implementation
 
 uses
@@ -49,8 +58,55 @@ uses
     System.IniFiles,
     System.Net.HttpClient,
     Uzap,
+    Uzap.Webhook,
     Uzap.Types,
+    System.JSON,
     UphoneNum;
+
+var
+    buttonReplyId: string;
+    buttonReplyTitle: string;
+
+procedure webhookButtonReplyHandler(accountId: string; numberId: string; recipientNumber: string; valueType: TzapWebhookValue; value: TJSONValue);
+begin
+    var mt := TzapWebhook.getMessageType(value);
+
+    if(
+        (mt = TzapWebhookMessage.interactiveButtonsReply) or 
+        (mt = TzapWebhookMessage.button)
+    ) then
+    begin
+        buttonReplyId    := TzapWebhook.getButtonsReplyId(value);
+        buttonReplyTitle := TzapWebhook.getButtonsReplyTitle(value);
+    end
+    else
+    begin
+        buttonReplyId    := '';
+        buttonReplyTitle := '';
+    end;
+end;
+
+procedure TzapWebhookTest.zapWebhookButtonsReply(testFile: string; expectedTitle: string; expectedId: string);
+begin
+    var jsonText := TFile.ReadAllText(testFile);
+    var json: TJSONObject := TJSONObject.ParseJSONValue(jsonText) as TJSONObject;
+
+    try
+        TzapWebhook.processWebhook(
+            json,
+            nil,
+            webhookButtonReplyHandler,
+            nil
+        );
+
+        Assert.AreEqual(expectedId, buttonReplyId, 'buttonReplyId');
+        Assert.AreEqual(expectedTitle, buttonReplyTitle, 'buttonReplyTitle');
+
+        json.Destroy();
+    except
+        on E: Exception do raise;
+    end;
+end;
 
 procedure TzapTest.zapSendSimple();
 begin
@@ -160,4 +216,5 @@ end;
 
 initialization
     TDUnitX.RegisterTestFixture(TzapTest);
+    TDUnitX.RegisterTestFixture(TzapWebhookTest);
 end.

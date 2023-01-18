@@ -61,7 +61,7 @@ uses
     Uzap.Types;
 
 procedure sample();
-	var token                := 'EAASedUjaj8qdaUBgAOyu8ZBX ... 8Srfouzlj4Tw7ZD7ZD';
+	var token                := 'EAASabjkashewfnygsajm ... ';
 	var webhookToken         := 'userDefinedWebhookToken';
 	var phoneid              := '108491275438361';
 	var businessAccountid    := '103038631267809';

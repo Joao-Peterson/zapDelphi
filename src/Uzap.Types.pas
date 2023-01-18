@@ -3,7 +3,8 @@ unit Uzap.Types;
 interface
 
 uses
-    System.JSON;
+    System.JSON,
+    UphoneNum;
 
 type
     // enum for type of value
@@ -20,9 +21,9 @@ type
     // enum for message types. Remember to tosubscribe to the correct events on the meta developer webhook page, otherwise some events will not be received
     TzapWebhookMessage = (
         unknowMessageType = 0,
-        interactiveButton,
         interactiveButtonsReply,
         interactiveListReply,
+        button,
         audio,
         document,
         text,
@@ -51,6 +52,16 @@ type
         Tpt_P,pa,ro,ru,sr,sk,sl,es,es_AR,es_ES,es_MX,sw,sv,ta,te,th,tr,uk,ur,uz,vi,zu
     );
 
+    // represents a whatsapp formatted phone number
+    TzapPhoneNum = class(TphoneNum)
+        private
+        function getZapNumber(): string;
+
+        public
+        // get whatsapp number in id form (truncated no spaces)
+        property zapNumber: String read getZapNumber;
+    end;
+
     // get locale as string
     function zapLocaleToString(locale: TzapLocale): String;
 
@@ -64,6 +75,11 @@ uses
 function zapLocaleToString(locale: TzapLocale): String;
 begin
     Result := GetEnumName(TypeInfo(TzapLocale), Integer(locale));
+end;
+
+function TzapPhoneNum.getZapNumber(): string;
+begin
+    Result := Format('%d%d%d%d', [self.FcountryCode, self.FnetworkCode, self.FsubscriptionCode, self.FsubscriptionCode2]);
 end;
 
 end.

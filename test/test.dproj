@@ -93,6 +93,7 @@
         <DCCReference Include="..\src\Uzap.Types.pas"/>
         <DCCReference Include="..\modules\phonenum\src\UphoneNum.pas"/>
         <DCCReference Include="Utests.pas"/>
+        <DCCReference Include="..\src\Uzap.Webhook.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

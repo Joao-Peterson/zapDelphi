@@ -14,7 +14,8 @@ uses
   Uzap in '..\src\Uzap.pas',
   Uzap.Types in '..\src\Uzap.Types.pas',
   UphoneNum in '..\modules\phonenum\src\UphoneNum.pas',
-  Utests in 'Utests.pas';
+  Utests in 'Utests.pas',
+  Uzap.Webhook in '..\src\Uzap.Webhook.pas';
 
 var
     runner : ITestRunner;
